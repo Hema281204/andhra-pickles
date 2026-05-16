@@ -26,6 +26,14 @@ export default function Cart() {
   setCurrentOrderId] =
   useState("")
 
+  const [confirmPopup,
+  setConfirmPopup] =
+  useState(false)
+
+  const [paymentType,
+  setPaymentType] =
+  useState("")
+
   let total = 0
 
   cart.forEach(item=>{
@@ -87,15 +95,6 @@ export default function Cart() {
   }
 
   const onlinePayment = async ()=>{
-
-    if(
-      !name ||
-      !phone ||
-      !address
-    ){
-      alert("Fill all details")
-      return
-    }
 
     const orderId =
     "AP" + Date.now()
@@ -183,15 +182,6 @@ export default function Cart() {
 
   const codPayment = async ()=>{
 
-    if(
-      !name ||
-      !phone ||
-      !address
-    ){
-      alert("Fill all details")
-      return
-    }
-
     const orderId =
     "AP" + Date.now()
 
@@ -276,6 +266,29 @@ export default function Cart() {
     setShowPopup(true)
   }
 
+  const confirmOrder = ()=>{
+
+    if(
+      !name ||
+      !phone ||
+      !address
+    ){
+      alert("Fill all details")
+      return
+    }
+
+    setConfirmPopup(false)
+
+    if(paymentType === "online"){
+
+      onlinePayment()
+
+    }else{
+
+      codPayment()
+    }
+  }
+
   return (
 
     <div className="cart-page">
@@ -357,7 +370,14 @@ export default function Cart() {
 
         <button
         className="online-btn"
-        onClick={onlinePayment}>
+
+        onClick={()=>{
+
+          setPaymentType("online")
+
+          setConfirmPopup(true)
+
+        }}>
 
           Online Payment
 
@@ -365,13 +385,63 @@ export default function Cart() {
 
         <button
         className="cod-btn"
-        onClick={codPayment}>
+
+        onClick={()=>{
+
+          setPaymentType("cod")
+
+          setConfirmPopup(true)
+
+        }}>
 
           Cash On Delivery
 
         </button>
 
       </div>
+
+      {confirmPopup && (
+
+        <div className="success-overlay">
+
+          <div className="success-box">
+
+            <h1>
+              Confirm Order
+            </h1>
+
+            <p>
+
+              Are you sure you want
+              to place this order?
+
+            </p>
+
+            <button
+            onClick={confirmOrder}>
+
+              Confirm Order
+
+            </button>
+
+            <button
+
+            className="continue-btn"
+
+            onClick={()=>
+            setConfirmPopup(false)}
+
+            >
+
+              Cancel
+
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
 
       {showPopup && (
 
