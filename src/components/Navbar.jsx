@@ -137,6 +137,12 @@ export default function Navbar(){
 
         </Link>
 
+        <Link to="/myorders">
+
+          📦 My Orders
+
+        </Link>
+
         <Link to="/admin">
 
           🛠 Admin
@@ -247,6 +253,8 @@ export default function Navbar(){
             🚚 Track
 
           </Link>
+
+          
 
           <Link
           to="/admin"
