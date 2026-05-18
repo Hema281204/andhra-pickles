@@ -1,4 +1,7 @@
 import { useState } from "react"
+
+import { useNavigate } from "react-router-dom"
+
 import SmallFooter
 from "../components/SmallFooter"
 
@@ -224,6 +227,8 @@ const products = [
 
 export default function Products(){
 
+  const navigate = useNavigate()
+
   const [search,setSearch] =
   useState("")
 
@@ -376,13 +381,15 @@ export default function Products(){
           className="product-card"
           key={item.id}
 
-          onClick={()=>
+          onClick={()=>{
 
-          window.location.href =
+            navigate(
 
-          `/product/${item.id}`
+              `/product/${item.id}`
 
-          }>
+            )
+
+          }}>
 
             <div className="product-image-box">
 
@@ -544,9 +551,10 @@ export default function Products(){
         ))}
 
       </div>
-       <SmallFooter />
+
+      <SmallFooter />
 
     </div>
-    
+
   )
 }
