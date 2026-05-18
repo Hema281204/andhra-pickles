@@ -1,7 +1,10 @@
 import { Link }
 from "react-router-dom"
+
 import { useEffect,useState }
 from "react"
+import Footer
+from "../components/Footer"
 
 const banners = [
 
@@ -73,13 +76,13 @@ export default function Home(){
 
           <Link to="/products">
 
-  <button>
+            <button>
 
-    Order Now
+              Order Now
 
-  </button>
+            </button>
 
-</Link>
+          </Link>
 
         </div>
 
@@ -135,30 +138,48 @@ export default function Home(){
 
           <div className="offer-card">
 
-            <h2>20% OFF</h2>
+            <h2>
+
+              20% OFF
+
+            </h2>
 
             <p>
+
               On Mango Pickle
+
             </p>
 
           </div>
 
           <div className="offer-card">
 
-            <h2>Buy 2 Get 1</h2>
+            <h2>
+
+              Buy 2 Get 1
+
+            </h2>
 
             <p>
+
               Chicken Pickle Combo
+
             </p>
 
           </div>
 
           <div className="offer-card">
 
-            <h2>Free Delivery</h2>
+            <h2>
+
+              Free Delivery
+
+            </h2>
 
             <p>
+
               Orders Above ₹999
+
             </p>
 
           </div>
@@ -167,48 +188,7 @@ export default function Home(){
 
       </section>
 
-      <section className="review-section">
-
-        <h1>
-          Customer Reviews
-        </h1>
-
-        <div className="review-container">
-
-          <div className="review-card">
-
-            <h2>Priya</h2>
-
-            <p>
-              Best homemade pickle taste ever!
-            </p>
-
-          </div>
-
-          <div className="review-card">
-
-            <h2>Rahul</h2>
-
-            <p>
-              Amazing spicy flavors and fast delivery.
-            </p>
-
-          </div>
-
-          <div className="review-card">
-
-            <h2>Sneha</h2>
-
-            <p>
-              Packaging and quality are excellent.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
+      <Footer />
     </div>
   )
 }

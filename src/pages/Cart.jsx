@@ -10,14 +10,85 @@ import {
 }
 from "firebase/firestore"
 
+import SmallFooter
+from "../components/SmallFooter"
+
 export default function Cart() {
 
   const cart =
-  JSON.parse(localStorage.getItem("cart")) || []
+  JSON.parse(
+    localStorage.getItem("cart")
+  ) || []
 
-  const [name,setName] = useState("")
-  const [phone,setPhone] = useState("")
-  const [address,setAddress] = useState("")
+  const [name,setName] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerName"
+    ) || ""
+
+  )
+
+  const [phone,setPhone] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerPhone"
+    ) || ""
+
+  )
+
+  const [house,setHouse] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerHouse"
+    ) || ""
+
+  )
+
+  const [street,setStreet] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerStreet"
+    ) || ""
+
+  )
+
+  const [landmark,setLandmark] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerLandmark"
+    ) || ""
+
+  )
+
+  const [pincode,setPincode] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerPincode"
+    ) || ""
+
+  )
+
+  const [location,setLocation] =
+
+  useState(
+
+    localStorage.getItem(
+      "customerCity"
+    ) || ""
+
+  )
 
   const [showPopup,setShowPopup] =
   useState(false)
@@ -38,9 +109,25 @@ export default function Cart() {
 
   cart.forEach(item=>{
 
-    total += item.price * item.quantity
+    total +=
+    (item.total || item.price)
+    * item.quantity
 
   })
+
+  let deliveryCharge = 0
+
+  if(total < 999){
+
+    deliveryCharge = 80
+
+  }else{
+
+    deliveryCharge = 0
+  }
+
+  const finalTotal =
+  total + deliveryCharge
 
   const increaseQty = (index)=>{
 
@@ -60,9 +147,13 @@ export default function Cart() {
 
     let updatedCart = [...cart]
 
-    if(updatedCart[index].quantity > 1){
+    if(
+      updatedCart[index]
+      .quantity > 1
+    ){
 
-      updatedCart[index].quantity -= 1
+      updatedCart[index]
+      .quantity -= 1
     }
 
     localStorage.setItem(
@@ -94,10 +185,120 @@ export default function Cart() {
     window.location.reload()
   }
 
-  const onlinePayment = async ()=>{
+  const placeOrder = async ()=>{
 
     const orderId =
     "AP" + Date.now()
+
+    let message =
+    `Hello Andhra Pickles,\n\n`
+
+    message +=
+    `Order ID: ${orderId}\n`
+
+    message +=
+    `Customer Name: ${name}\n`
+
+    message +=
+    `Phone: ${phone}\n`
+
+    message +=
+    `House: ${house}\n`
+
+    message +=
+    `Street: ${street}\n`
+
+    message +=
+    `Landmark: ${landmark}\n`
+
+    message +=
+    `City: ${location}\n`
+
+    message +=
+    `Pincode: ${pincode}\n\n`
+
+    message +=
+    `Ordered Items:\n`
+
+    cart.forEach(item=>{
+
+      message +=
+      `• ${item.name}\n`
+
+      message +=
+      `Weight: ${item.weight}\n`
+
+      message +=
+      `Qty: ${item.quantity}\n`
+
+      message +=
+      `Price: ₹${item.total}\n\n`
+
+    })
+
+    message +=
+    `Subtotal: ₹${total}\n`
+
+    message +=
+    `Delivery Charge: ₹${deliveryCharge}\n`
+
+    message +=
+    `Final Total: ₹${finalTotal}\n\n`
+
+    message +=
+    `Payment Method: `
+
+    message +=
+
+    paymentType === "online"
+
+    ?
+
+    "Online Payment"
+
+    :
+
+    "Cash On Delivery"
+
+    localStorage.setItem(
+      "customerName",
+      name
+    )
+
+    localStorage.setItem(
+      "customerPhone",
+      phone
+    )
+
+    localStorage.setItem(
+      "customerHouse",
+      house
+    )
+
+    localStorage.setItem(
+      "customerStreet",
+      street
+    )
+
+    localStorage.setItem(
+      "customerLandmark",
+      landmark
+    )
+
+    localStorage.setItem(
+      "customerPincode",
+      pincode
+    )
+
+    localStorage.setItem(
+      "customerCity",
+      location
+    )
+
+    localStorage.setItem(
+      "latestOrderId",
+      orderId
+    )
 
     await addDoc(
 
@@ -111,154 +312,53 @@ export default function Cart() {
 
         phone,
 
-        address,
+        house,
+
+        street,
+
+        landmark,
+
+        pincode,
+
+        location,
 
         cart,
 
-        total,
+        subtotal:total,
 
-        payment:"Online Payment",
+        deliveryCharge,
 
-        status:"Pending"
+        total:finalTotal,
+
+        payment:
+        paymentType === "online"
+
+        ?
+
+        "Online Payment"
+
+        :
+
+        "Cash On Delivery",
+
+        paymentStatus:"Unpaid",
+
+        status:"Order Confirmed",
+
+        date:new Date()
+        .toLocaleString()
 
       }
 
     )
 
-    let message =
-    `Hello Andhra Pickles,%0A%0A`
+    const whatsappURL =
 
-    message +=
-    `Order ID: ${orderId}%0A`
-
-    message +=
-    `Customer Name: ${name}%0A`
-
-    message +=
-    `Phone: ${phone}%0A`
-
-    message +=
-    `Address: ${address}%0A%0A`
-
-    message +=
-    `Ordered Items:%0A`
-
-    cart.forEach(item=>{
-
-      message +=
-      `• ${item.name}%0A`
-
-      message +=
-      `Qty: ${item.quantity}%0A`
-
-      message +=
-      `Price: ₹${item.price * item.quantity}%0A%0A`
-
-    })
-
-    message +=
-    `%0ATotal Amount: ₹${total}%0A`
-
-    message +=
-    `I will pay online.`
-
-    localStorage.setItem(
-      "customerPhone",
-      phone
-    )
+    `https://api.whatsapp.com/send?phone=918317565117&text=${encodeURIComponent(message)}`
 
     window.open(
-
-      `https://wa.me/918317565117?text=${message}`,
-
+      whatsappURL,
       "_blank"
-
-    )
-
-    setCurrentOrderId(orderId)
-
-    setShowPopup(true)
-  }
-
-  const codPayment = async ()=>{
-
-    const orderId =
-    "AP" + Date.now()
-
-    await addDoc(
-
-      collection(db,"orders"),
-
-      {
-
-        orderId,
-
-        customerName:name,
-
-        phone,
-
-        address,
-
-        cart,
-
-        total,
-
-        payment:"Cash On Delivery",
-
-        status:"Pending"
-
-      }
-
-    )
-
-    let message =
-    `Hello Andhra Pickles,%0A%0A`
-
-    message +=
-    `Order ID: ${orderId}%0A`
-
-    message +=
-    `Customer Name: ${name}%0A`
-
-    message +=
-    `Phone: ${phone}%0A`
-
-    message +=
-    `Address: ${address}%0A%0A`
-
-    message +=
-    `Ordered Items:%0A`
-
-    cart.forEach(item=>{
-
-      message +=
-      `• ${item.name}%0A`
-
-      message +=
-      `Qty: ${item.quantity}%0A`
-
-      message +=
-      `Price: ₹${item.price * item.quantity}%0A%0A`
-
-    })
-
-    message +=
-    `%0ATotal Amount: ₹${total}%0A`
-
-    message +=
-    `I will pay Cash On Delivery.`
-
-    localStorage.setItem(
-      "customerPhone",
-      phone
-    )
-
-    window.open(
-
-      `https://wa.me/918317565117?text=${message}`,
-
-      "_blank"
-
     )
 
     setCurrentOrderId(orderId)
@@ -271,235 +371,423 @@ export default function Cart() {
     if(
       !name ||
       !phone ||
-      !address
+      !house ||
+      !street ||
+      !location ||
+      !pincode
     ){
-      alert("Fill all details")
+
+      alert(
+        "Fill all required details"
+      )
+
       return
     }
 
     setConfirmPopup(false)
 
-    if(paymentType === "online"){
-
-      onlinePayment()
-
-    }else{
-
-      codPayment()
-    }
+    placeOrder()
   }
 
   return (
 
-    <div className="cart-page">
+    <div className="cart-wrapper">
 
-      <h1>Your Cart</h1>
+      <div className="cart-page">
 
-      {cart.map((item,index)=>(
+        <h1 className="cart-heading">
 
-        <div className="cart-box" key={index}>
+          Your Cart
 
-          <h3>{item.name}</h3>
+        </h1>
 
-          <p>
-            ₹{item.price}
-          </p>
+        {
 
-          <div className="qty-box">
+        cart.length === 0
 
-            <button
-            onClick={()=>decreaseQty(index)}>
+        ?
 
-              -
+        (
 
-            </button>
+          <h2 className="empty-cart">
 
-            <span>
-              {item.quantity}
-            </span>
+            Cart is Empty
 
-            <button
-            onClick={()=>increaseQty(index)}>
+          </h2>
 
-              +
+        )
 
-            </button>
+        :
 
-          </div>
+        (
 
-          <button
-          className="remove-btn"
-          onClick={()=>removeItem(index)}>
+          <>
+          
+          {
 
-            Remove
+          cart.map((item,index)=>(
 
-          </button>
+            <div
+            className="modern-cart-box"
+            key={index}>
 
-        </div>
+              <div className="cart-left">
 
-      ))}
+                <img
+                src={item.image}
+                alt={item.name}
+                className="cart-image"
+                />
 
-      <h2 className="total">
-        Total: ₹{total}
-      </h2>
+                <div className="cart-details">
 
-      <button
-      className="clear-btn"
-      onClick={clearCart}>
+                  <h2>
 
-        Clear Cart
+                    {item.name}
 
-      </button>
+                  </h2>
 
-      <input
-      placeholder="Enter Name"
-      onChange={(e)=>setName(e.target.value)}
-      />
+                  <p
+                  className="cart-weight">
 
-      <input
-      placeholder="Enter Phone Number"
-      onChange={(e)=>setPhone(e.target.value)}
-      />
+                    {item.weight}
 
-      <textarea
-      placeholder="Enter Address"
-      onChange={(e)=>setAddress(e.target.value)}
-      />
+                  </p>
 
-      <div className="payment-buttons">
+                  <h3>
 
-        <button
-        className="online-btn"
+                    ₹{item.total}
 
-        onClick={()=>{
+                  </h3>
 
-          setPaymentType("online")
+                  <button
+                  className="remove-btn"
 
-          setConfirmPopup(true)
+                  onClick={()=>
+                  removeItem(index)}>
 
-        }}>
+                    Remove
 
-          Online Payment
+                  </button>
 
-        </button>
+                </div>
 
-        <button
-        className="cod-btn"
+              </div>
 
-        onClick={()=>{
+              <div className="cart-right">
 
-          setPaymentType("cod")
+                <button
+                onClick={()=>
+                decreaseQty(index)}>
 
-          setConfirmPopup(true)
+                  -
 
-        }}>
+                </button>
 
-          Cash On Delivery
+                <span>
 
-        </button>
+                  {item.quantity}
 
-      </div>
+                </span>
 
-      {confirmPopup && (
+                <button
+                onClick={()=>
+                increaseQty(index)}>
 
-        <div className="success-overlay">
+                  +
 
-          <div className="success-box">
+                </button>
 
-            <h1>
-              Confirm Order
-            </h1>
+              </div>
 
-            <p>
+            </div>
 
-              Are you sure you want
-              to place this order?
+          ))}
 
-            </p>
+          <div className="bill-box">
 
-            <button
-            onClick={confirmOrder}>
+            <h3>
 
-              Confirm Order
+              Subtotal:
+              ₹{total}
 
-            </button>
+            </h3>
 
-            <button
+            <h3>
 
-            className="continue-btn"
+              Delivery:
 
-            onClick={()=>
-            setConfirmPopup(false)}
+              {
 
-            >
+              deliveryCharge === 0
 
-              Cancel
+              ?
 
-            </button>
+              " FREE"
 
-          </div>
+              :
 
-        </div>
+              ` ₹${deliveryCharge}`
 
-      )}
+              }
 
-      {showPopup && (
+            </h3>
 
-        <div className="success-overlay">
+            <h2
+            className="final-total">
 
-          <div className="success-box">
-
-            <h1>
-              🎉 Order Placed
-            </h1>
-
-            <p>
-
-              Your order has been placed successfully.
-
-            </p>
-
-            <h2>
-
-              Order ID:
-              {currentOrderId}
+              Final Total:
+              ₹{finalTotal}
 
             </h2>
 
+          </div>
+
+          {
+
+          total >= 999 && (
+
+            <p
+            className="free-delivery">
+
+              🎉 You Got Free Delivery
+
+            </p>
+
+          )}
+
+          <button
+          className="clear-btn"
+          onClick={clearCart}>
+
+            Clear Cart
+
+          </button>
+
+          <div className="address-grid">
+
+            <input
+            type="text"
+            name="name"
+            autoComplete="name"
+            placeholder="Full Name *"
+            value={name}
+            onChange={(e)=>
+            setName(e.target.value)}
+            />
+
+            <input
+            type="tel"
+            name="tel"
+            autoComplete="tel"
+            placeholder="Phone Number *"
+            value={phone}
+            onChange={(e)=>
+            setPhone(e.target.value)}
+            />
+
+            <input
+            type="text"
+            name="address-line1"
+            autoComplete="address-line1"
+            placeholder="House / Flat No *"
+            value={house}
+            onChange={(e)=>
+            setHouse(e.target.value)}
+            />
+
+            <input
+            type="text"
+            name="street-address"
+            autoComplete="street-address"
+            placeholder="Street / Area *"
+            value={street}
+            onChange={(e)=>
+            setStreet(e.target.value)}
+            />
+
+            <input
+            type="text"
+            name="address-level3"
+            autoComplete="address-level3"
+            placeholder="Landmark"
+            value={landmark}
+            onChange={(e)=>
+            setLandmark(e.target.value)}
+            />
+
+            <input
+            type="text"
+            name="address-level2"
+            autoComplete="address-level2"
+            placeholder="City *"
+            value={location}
+            onChange={(e)=>
+            setLocation(e.target.value)}
+            />
+
+            <input
+            type="text"
+            name="postal-code"
+            autoComplete="postal-code"
+            placeholder="Pincode *"
+            value={pincode}
+            onChange={(e)=>
+            setPincode(e.target.value)}
+            />
+
+          </div>
+
+          <div className="payment-buttons">
+
             <button
+            className="online-btn"
 
-            onClick={()=>
-            window.location.href="/track"}
+            onClick={()=>{
 
-            >
+              setPaymentType(
+                "online"
+              )
 
-              Track Order
+              setConfirmPopup(true)
+
+            }}>
+
+              Online Payment
 
             </button>
 
             <button
-
-            className="continue-btn"
+            className="cod-btn"
 
             onClick={()=>{
 
-              setShowPopup(false)
+              setPaymentType(
+                "cod"
+              )
 
-              window.location.href="/products"
+              setConfirmPopup(true)
 
-            }}
+            }}>
 
-            >
-
-              Continue Shopping
+              Cash On Delivery
 
             </button>
 
           </div>
 
-        </div>
+          </>
 
-      )}
+        )}
+
+        {confirmPopup && (
+
+          <div className="success-overlay">
+
+            <div className="success-box">
+
+              <h1>
+
+                Confirm Order
+
+              </h1>
+
+              <p>
+
+                Are you sure you want
+                to place this order?
+
+              </p>
+
+              <button
+              onClick={confirmOrder}>
+
+                Confirm Order
+
+              </button>
+
+              <button
+
+              className="continue-btn"
+
+              onClick={()=>
+              setConfirmPopup(false)}
+
+              >
+
+                Cancel
+
+              </button>
+
+            </div>
+
+          </div>
+
+        )}
+
+        {showPopup && (
+
+          <div className="success-overlay">
+
+            <div className="success-box">
+
+              <h1>
+
+                🎉 Order Placed
+
+              </h1>
+
+              <p>
+
+                Your order has been placed successfully.
+
+              </p>
+
+              <h2>
+
+                Order ID:
+                {currentOrderId}
+
+              </h2>
+
+              <button
+
+              onClick={()=>
+              window.location.href="/track"}
+
+              >
+
+                Track Order
+
+              </button>
+
+              <button
+
+              className="continue-btn"
+
+              onClick={()=>{
+
+                setShowPopup(false)
+
+                window.location.href="/products"
+
+              }}
+
+              >
+
+                Continue Shopping
+
+              </button>
+
+            </div>
+
+          </div>
+
+        )}
+
+      </div>
+
+      <SmallFooter />
 
     </div>
   )

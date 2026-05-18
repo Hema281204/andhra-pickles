@@ -1,60 +1,269 @@
-import { Link } from "react-router-dom"
+import { Link }
+from "react-router-dom"
+
+import { useState }
+from "react"
 
 export default function Navbar(){
 
+  const [menuOpen,setMenuOpen] =
+  useState(false)
+
   const cart =
-  JSON.parse(localStorage.getItem("cart")) || []
 
-  let totalItems = 0
+  JSON.parse(
 
-  cart.forEach(item=>{
+    localStorage.getItem(
+      "cart"
+    )
 
-    totalItems += item.quantity
-  })
+  ) || []
+
+  const wishlist =
+
+  JSON.parse(
+
+    localStorage.getItem(
+      "wishlist"
+    )
+
+  ) || []
+
+  const cartCount =
+
+  cart.reduce(
+
+    (acc,item)=>
+
+    acc + item.quantity,
+
+    0
+
+  )
+
+  const wishlistCount =
+
+  wishlist.length
 
   return(
 
     <nav className="navbar">
 
-      <h1>
-        🌶 Andhra Pickles
-      </h1>
+      <div className="nav-left">
 
-      <div className="nav-links">
+        <button
+
+        className="menu-btn"
+
+        onClick={()=>{
+
+          setMenuOpen(!menuOpen)
+
+        }}>
+
+          ☰
+
+        </button>
+
+        <h1 className="logo">
+
+          Andhra Pickles
+
+        </h1>
+
+      </div>
+
+      <div className="nav-links desktop-menu">
 
         <Link to="/">
-          Home
+
+          🏠 Home
+
         </Link>
 
         <Link to="/products">
-          Products
+
+          🛍 Products
+
+        </Link>
+
+        <Link to="/wishlist">
+
+          <div className="nav-item">
+
+            ❤️ Wishlist
+
+            {
+
+            wishlistCount > 0 && (
+
+              <span className="menu-count">
+
+                {wishlistCount}
+
+              </span>
+
+            )}
+
+          </div>
+
         </Link>
 
         <Link to="/cart">
 
-          Cart
+          <div className="nav-item">
 
-          <span className="cart-count">
+            🛒 Cart
 
-            {totalItems}
+            {
 
-          </span>
+            cartCount > 0 && (
+
+              <span className="menu-count">
+
+                {cartCount}
+
+              </span>
+
+            )}
+
+          </div>
 
         </Link>
 
         <Link to="/track">
-          Track
-        </Link>
 
-        <Link to="/myorders">
-          My Orders
+          🚚 Track
+
         </Link>
 
         <Link to="/admin">
-          Admin
+
+          🛠 Admin
+
         </Link>
 
       </div>
+
+      {
+
+      menuOpen && (
+
+        <div className="mobile-menu">
+
+          <Link
+          to="/"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            🏠 Home
+
+          </Link>
+
+          <Link
+          to="/products"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            🛍 Products
+
+          </Link>
+
+          <Link
+          to="/wishlist"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            <div className="nav-item">
+
+              ❤️ Wishlist
+
+              {
+
+              wishlistCount > 0 && (
+
+                <span className="menu-count">
+
+                  {wishlistCount}
+
+                </span>
+
+              )}
+
+            </div>
+
+          </Link>
+
+          <Link
+          to="/cart"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            <div className="nav-item">
+
+              🛒 Cart
+
+              {
+
+              cartCount > 0 && (
+
+                <span className="menu-count">
+
+                  {cartCount}
+
+                </span>
+
+              )}
+
+            </div>
+
+          </Link>
+
+          <Link
+          to="/track"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            🚚 Track
+
+          </Link>
+
+          <Link
+          to="/admin"
+
+          onClick={()=>{
+
+            setMenuOpen(false)
+
+          }}>
+
+            🛠 Admin
+
+          </Link>
+
+        </div>
+
+      )}
 
     </nav>
   )

@@ -15,8 +15,16 @@ import Cart from "./pages/Cart"
 import Track from "./pages/Track"
 import Admin from "./pages/Admin"
 import MyOrders from "./pages/MyOrders"
+import ProductDetails
+from "./pages/ProductDetails"
+import Wishlist
+from "./pages/Wishlist"
+import { ToastContainer }
+from "react-toastify"
+import MobileBottomNav
+from "./components/MobileBottomNav"
 
-import Footer from "./components/Footer"
+
 import WhatsAppButton from "./components/WhatsAppButton"
 
 export default function App() {
@@ -36,6 +44,7 @@ export default function App() {
     <BrowserRouter>
 
       <Navbar />
+      <MobileBottomNav />
 
       <Routes>
 
@@ -68,10 +77,19 @@ export default function App() {
         path="/myorders"
         element={<MyOrders />}
         />
+        <Route
+path="/product/:id"
+element={<ProductDetails/>}
+/>
+      <Route
+path="/wishlist"
+element={<Wishlist/>}
+/>
 
       </Routes>
+      <ToastContainer />
 
-      <Footer />
+      
 
       <WhatsAppButton />
 
