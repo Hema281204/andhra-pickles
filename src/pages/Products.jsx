@@ -1,4 +1,5 @@
 import { useState } from "react"
+
 import SmallFooter
 from "../components/SmallFooter"
 
@@ -223,6 +224,7 @@ const products = [
 ]
 
 export default function Products(){
+  const navigate = useNavigate()
 
   const [search,setSearch] =
   useState("")

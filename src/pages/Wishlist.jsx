@@ -1,10 +1,15 @@
 import { useEffect,useState }
 from "react"
 
+import { useNavigate }
+from "react-router-dom"
+
 import SmallFooter
 from "../components/SmallFooter"
 
 export default function Wishlist(){
+
+  const navigate = useNavigate()
 
   const [wishlist,setWishlist] =
   useState([])
@@ -106,13 +111,15 @@ export default function Wishlist(){
               className="wishlist-card"
               key={item.id}
 
-              onClick={()=>
+              onClick={()=>{
 
-              window.location.href =
+                navigate(
 
-              `/product/${item.id}`
+                  `/product/${item.id}`
 
-              }>
+                )
+
+              }}>
 
                 <img src={item.image} />
 
