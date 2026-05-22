@@ -245,7 +245,7 @@ export default function ProductDetails(){
 
     window.open(
 
-      `https://wa.me/919999999999?text=${message}`,
+      `https://wa.me/918317565117?text=${message}`,
 
       "_blank"
     )
