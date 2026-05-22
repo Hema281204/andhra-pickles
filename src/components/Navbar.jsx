@@ -241,6 +241,16 @@ export default function Navbar(){
 
           </Link>
 
+          <Link to="/myorders"
+          onClick={()=>{
+            setMenuOpen(false)
+          }}
+          >
+
+          📦 My Orders
+
+        </Link>
+
           <Link
           to="/track"
 

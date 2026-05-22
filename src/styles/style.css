@@ -1761,6 +1761,42 @@ button:hover{
 
   gap:20px;
 }
+@media (max-width:768px){
+
+  .products-grid{
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:12px;
+  }
+
+  .product-card{
+
+    border-radius:16px;
+  }
+
+}
+@media (max-width:768px){
+
+  .product-image-box img{
+
+    height:140px;
+
+    object-fit:cover;
+  }
+
+  .product-content h2{
+
+    font-size:15px;
+  }
+
+  .product-price{
+
+    font-size:18px;
+  }
+
+}
 
 .product-card{
 
